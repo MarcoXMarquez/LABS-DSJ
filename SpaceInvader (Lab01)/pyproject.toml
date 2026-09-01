@@ -1,0 +1,9 @@
+[project]
+name = "spaceinvader"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "pip>=26.2.1",
+    "pygame>=2.6.1",
+    "setuptools>=84.0.0",
+]
