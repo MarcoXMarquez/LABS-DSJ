@@ -24,15 +24,23 @@ ALL_POWERS = [
 ]
 
 POWER_CONFIG = {
-    POWER_FIRE:    {"color": COLOR_ORANGE,     "label": "FUEGO",    "sym": "🔥", "name": "FUEGO",     "symbol": "🔥"},
-    POWER_ICE:     {"color": COLOR_BLUE,        "label": "HIELO",    "sym": "❄️",  "name": "HIELO",     "symbol": "❄️"},
-    POWER_SHIELD:  {"color": COLOR_CYAN,        "label": "ESCUDO",   "sym": "🛡️",  "name": "ESCUDO",    "symbol": "🛡️"},
-    POWER_ELECTRO: {"color": COLOR_YELLOW,      "label": "ELECTRO",  "sym": "⚡",  "name": "ELECTRO",   "symbol": "⚡"},
-    POWER_VOID:    {"color": COLOR_PURPLE,      "label": "VACIO",    "sym": "🌀",  "name": "VACÍO",     "symbol": "🌀"},
-    POWER_SPEED:   {"color": COLOR_GOLD,        "label": "VELOCIDAD","sym": "💨",  "name": "VELOCIDAD", "symbol": "💨"},
-    POWER_HEALTH:  {"color": COLOR_GREEN,       "label": "VIDA",     "sym": "💚",  "name": "VIDA",      "symbol": "💚"},
-    POWER_FUEL:    {"color": (230, 50, 180),    "label": "FUEL",     "sym": "⚗️",  "name": "FUEL",      "symbol": "⚗️"},
+    POWER_FIRE:    {"color": COLOR_ORANGE,     "label": "FUEGO",     "sym": "FIR", "name": "FUEGO",     "symbol": "FIR"},
+    POWER_ICE:     {"color": COLOR_BLUE,       "label": "HIELO",     "sym": "ICE", "name": "HIELO",     "symbol": "ICE"},
+    POWER_SHIELD:  {"color": COLOR_CYAN,       "label": "ESCUDO",    "sym": "SHD", "name": "ESCUDO",    "symbol": "SHD"},
+    POWER_ELECTRO: {"color": COLOR_YELLOW,     "label": "ELECTRO",   "sym": "ELC", "name": "ELECTRO",   "symbol": "ELC"},
+    POWER_VOID:    {"color": COLOR_PURPLE,     "label": "VACIO",     "sym": "VOD", "name": "VACÍO",     "symbol": "VOD"},
+    POWER_SPEED:   {"color": COLOR_GOLD,       "label": "VELOCIDAD", "sym": "SPD", "name": "VELOCIDAD", "symbol": "SPD"},
+    POWER_HEALTH:  {"color": COLOR_GREEN,      "label": "VIDA",      "sym": "HP",  "name": "VIDA",      "symbol": "HP"},
+    POWER_FUEL:    {"color": (230, 50, 180),   "label": "FUEL",      "sym": "FUL", "name": "REACTOR",   "symbol": "FUL"},
 }
+
+_DROP_FONT = None
+
+def get_drop_font():
+    global _DROP_FONT
+    if _DROP_FONT is None:
+        _DROP_FONT = pygame.font.Font('freesansbold.ttf', 11)
+    return _DROP_FONT
 
 
 class PowerDrop:
@@ -80,19 +88,30 @@ class PowerDrop:
         return False
 
     def draw(self, surface):
-        """Dibuja la burbuja brillante con su icono interior."""
+        """Dibuja la cápsula de energía con halo de pulso y código táctico nítido."""
         pos = (int(self.x), int(self.y))
         color = self.config["color"]
+        now = pygame.time.get_ticks()
 
-        # Halo exterior translúcido
-        pygame.draw.circle(surface, color, pos, self.radius, width=2)
-        # Núcleo brillante interior
-        pygame.draw.circle(surface, (color[0] // 2, color[1] // 2, color[2] // 2), pos, self.radius - 3)
+        # Pulso sutil en el halo exterior
+        pulse = math.sin((now - self.birth_time) * 0.007) * 2
+        outer_r = int(self.radius + pulse)
 
-        # Letra/Símbolo identificador
-        font = pygame.font.SysFont("Arial", 12, bold=True)
-        t = font.render(self.config["sym"], True, COLOR_WHITE)
+        # 1. Halo exterior
+        pygame.draw.circle(surface, color, pos, max(outer_r, self.radius), width=2)
+        # 2. Núcleo oscuro tecnológico
+        dark_bg = (max(10, color[0] // 5), max(10, color[1] // 5), max(15, color[2] // 5))
+        pygame.draw.circle(surface, dark_bg, pos, self.radius - 2)
+        pygame.draw.circle(surface, color, pos, self.radius - 2, width=1)
+
+        # 3. Código táctico nítido con sombra
+        font = get_drop_font()
+        tag = self.config["sym"]
+        shadow = font.render(tag, True, (0, 0, 0))
+        t = font.render(tag, True, COLOR_WHITE)
+        s_rect = shadow.get_rect(center=(pos[0] + 1, pos[1] + 1))
         t_rect = t.get_rect(center=pos)
+        surface.blit(shadow, s_rect)
         surface.blit(t, t_rect)
 
 

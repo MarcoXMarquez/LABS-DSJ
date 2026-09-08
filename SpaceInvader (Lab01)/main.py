@@ -283,20 +283,20 @@ def main():
                     if not drop.is_collected and math.hypot(player.x + player.width // 2 - drop.x, player.y + player.height // 2 - drop.y) < 36:
                         drop.is_collected = True
                         weapon_sys.missile_ammo = min(weapon_sys.max_missile_ammo, weapon_sys.missile_ammo + 1)
-                        text_mgr.add_text(player.x, player.y - 25, "+1 MISIL 🚀", COLOR_RED)
+                        text_mgr.add_text(player.x, player.y - 25, "+1 MISIL", COLOR_RED)
                         particle_mgr.spawn_sparks(drop.x, drop.y, COLOR_RED, 8)
 
                 # 5. Flujo de Niveles y Jefes
                 if not wave_mgr.wave_in_progress and len(wave_mgr.enemies) == 0:
                     if wave_mgr.current_level == 6 and not mini_boss:
                         mini_boss = MiniBoss(sw, sh)
-                        text_mgr.add_text(sw // 2 - 140, 200, "🚨 ¡ALERTA: CRUCERO DE ASALTO! 🚨", COLOR_RED)
+                        text_mgr.add_text(sw // 2 - 160, 200, "// ALERTA: CRUCERO DE ASALTO //", COLOR_RED)
                         screen_shake.add_trauma(0.6)
 
                     elif wave_mgr.current_level == 6 and mini_boss and not mini_boss.is_alive:
                         if level_transition_timer == 0:
                             level_transition_timer = now + 2500
-                            text_mgr.add_text(sw // 2 - 120, 250, "✨ ¡CRUCERO DESTRUIDO! ✨", COLOR_GOLD)
+                            text_mgr.add_text(sw // 2 - 140, 250, "[ CRUCERO DE ASALTO DESTRUIDO ]", COLOR_GOLD)
                         elif now > level_transition_timer:
                             level_transition_timer = 0
                             wave_mgr.start_level(7)
@@ -304,7 +304,7 @@ def main():
                     elif wave_mgr.current_level == 12 and not final_boss:
                         final_boss = FinalBoss(sw, sh)
                         final_boss.init_phase_1(wave_mgr)
-                        text_mgr.add_text(sw // 2 - 160, 200, "☠️ ¡NAVE NODRIZA DETECTADA! ☠️", COLOR_RED)
+                        text_mgr.add_text(sw // 2 - 170, 200, "// AMENAZA OMEGA: NAVE NODRIZA //", COLOR_RED)
                         screen_shake.add_trauma(0.8)
 
                     elif wave_mgr.current_level == 12 and final_boss and not final_boss.is_alive:
@@ -358,7 +358,7 @@ def main():
                                 
                                 coins_earned = enemy.coin_reward
                                 player.add_coins(coins_earned)
-                                text_mgr.add_text(enemy.x, enemy.y, f"+{coins_earned} 🪙", COLOR_YELLOW)
+                                text_mgr.add_text(enemy.x, enemy.y, f"+{coins_earned} CR", COLOR_YELLOW)
                                 
                                 particle_mgr.spawn_explosion(enemy.x + enemy.width // 2, enemy.y + enemy.height // 2, is_large=enemy.is_captain)
                                 if explosion_sound: explosion_sound.play()
@@ -389,7 +389,7 @@ def main():
                                 stats['kills'] += 1
                                 stats['score'] += 1500
                                 player.add_coins(mini_boss.coin_reward)
-                                text_mgr.add_text(mini_boss.x + 40, mini_boss.y, f"+{mini_boss.coin_reward} 🪙", COLOR_GOLD)
+                                text_mgr.add_text(mini_boss.x + 40, mini_boss.y, f"+{mini_boss.coin_reward} CR", COLOR_GOLD)
                                 drop_mgr.try_spawn_drop(mini_boss.x + mini_boss.width // 2, mini_boss.y + mini_boss.height // 2, force=True)
                                 particle_mgr.spawn_explosion(mini_boss.x + mini_boss.width // 2, mini_boss.y + mini_boss.height // 2, is_large=True)
                                 screen_shake.add_trauma(0.7)
@@ -425,7 +425,7 @@ def main():
                             
                             res = final_boss.take_damage(bullet.damage)
                             if res == "phase2_transition":
-                                text_mgr.add_text(sw // 2 - 160, 220, "⚡ ¡FASE 2: NÚCLEO ENRAGE DESATADO! ⚡", COLOR_RED)
+                                text_mgr.add_text(sw // 2 - 170, 220, "// FASE 2: NUCLEO EN ENRAGE //", COLOR_RED)
                                 particle_mgr.spawn_explosion(final_boss.x + final_boss.width // 2, final_boss.y + final_boss.height // 2, is_large=True)
                                 screen_shake.add_trauma(0.8)
                             elif res == "final_victory":
@@ -508,12 +508,12 @@ def main():
             text_mgr.draw(render_surf, font_small)
             
             # HUD Superior
-            draw_hud(render_surf, player, weapon_sys, stats['score'], wave_mgr.current_level, sw, font_title, font_hud)
+            draw_hud(render_surf, player, weapon_sys, stats['score'], wave_mgr.current_level, sw, font_large, font_small)
             
-            # HUD Táctico de Armas Abajo a la Derecha
+            # HUD Tactico de Armas Abajo a la Derecha
             draw_weapon_hud_bottom_right(render_surf, player, weapon_sys, state_mgr.shop, sw, sh, font_large, font_small)
 
-            # Alerta de Pérdida de Vida (-1 VIDA 💔)
+            # Alerta de Perdida de Vida (-1 VIDA)
             if now < player.life_lost_alert_until:
                 draw_life_lost_alert(render_surf, sw, sh, font_huge)
 

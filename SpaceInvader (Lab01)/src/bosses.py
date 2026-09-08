@@ -118,19 +118,25 @@ class MiniBoss:
             pygame.draw.rect(surface, body_c, rect, border_radius=12)
             pygame.draw.rect(surface, COLOR_GOLD, rect, width=2, border_radius=12)
 
-        # Barra de Vida Superior
-        bar_w = 420
-        bar_h = 16
+        # Barra de Vida Superior Táctica
+        bar_w = 440
+        bar_h = 12
         bar_x = self.screen_width // 2 - bar_w // 2
-        bar_y = 65
-        pygame.draw.rect(surface, (30, 30, 30), (bar_x, bar_y, bar_w, bar_h), border_radius=4)
+        bar_y = 80
+        
+        panel_bg = pygame.Surface((bar_w + 30, 36), pygame.SRCALPHA)
+        panel_bg.fill((10, 14, 22, 210))
+        surface.blit(panel_bg, (bar_x - 15, bar_y - 20))
+        pygame.draw.rect(surface, (45, 55, 75), (bar_x - 15, bar_y - 20, bar_w + 30, 36), width=1, border_radius=4)
+
+        pygame.draw.rect(surface, (20, 24, 34), (bar_x, bar_y, bar_w, bar_h), border_radius=3)
         fill_w = int(bar_w * max(0, self.hp / self.max_hp))
         if fill_w > 0:
-            pygame.draw.rect(surface, COLOR_RED, (bar_x, bar_y, fill_w, bar_h), border_radius=4)
-        pygame.draw.rect(surface, COLOR_GOLD, (bar_x, bar_y, bar_w, bar_h), width=2, border_radius=4)
+            pygame.draw.rect(surface, COLOR_RED, (bar_x, bar_y, fill_w, bar_h), border_radius=3)
+        pygame.draw.rect(surface, COLOR_GOLD, (bar_x, bar_y, bar_w, bar_h), width=1, border_radius=3)
         
-        name_t = font.render(f"{self.name} (HP: {int(self.hp)}/{self.max_hp})", True, COLOR_GOLD)
-        surface.blit(name_t, (self.screen_width // 2 - name_t.get_width() // 2, bar_y - 22))
+        name_t = font.render(f"// AMENAZA: CRUCERO DE ASALTO //  HP: {int(self.hp)} / {self.max_hp}", True, COLOR_GOLD)
+        surface.blit(name_t, (self.screen_width // 2 - name_t.get_width() // 2, bar_y - 17))
 
 
 class FinalBoss:
@@ -255,18 +261,24 @@ class FinalBoss:
             pygame.draw.rect(surface, body_color, rect, border_radius=16)
             pygame.draw.rect(surface, COLOR_GOLD, rect, width=3, border_radius=16)
 
-        # Barra de Vida Superior
-        bar_w = 580
-        bar_h = 20
+        # Barra de Vida Superior Táctica
+        bar_w = 540
+        bar_h = 14
         bar_x = self.screen_width // 2 - bar_w // 2
-        bar_y = 65
-        pygame.draw.rect(surface, (20, 20, 20), (bar_x, bar_y, bar_w, bar_h), border_radius=5)
+        bar_y = 80
+        
+        panel_bg = pygame.Surface((bar_w + 30, 38), pygame.SRCALPHA)
+        panel_bg.fill((10, 14, 22, 215))
+        surface.blit(panel_bg, (bar_x - 15, bar_y - 20))
+        pygame.draw.rect(surface, (55, 68, 92), (bar_x - 15, bar_y - 20, bar_w + 30, 38), width=1, border_radius=4)
+
+        pygame.draw.rect(surface, (20, 24, 34), (bar_x, bar_y, bar_w, bar_h), border_radius=3)
         fill_w = int(bar_w * max(0, self.hp / self.max_hp))
         bar_color = COLOR_PURPLE if self.phase == 1 else COLOR_RED
         if fill_w > 0:
-            pygame.draw.rect(surface, bar_color, (bar_x, bar_y, fill_w, bar_h), border_radius=5)
-        pygame.draw.rect(surface, COLOR_GOLD, (bar_x, bar_y, bar_w, bar_h), width=2, border_radius=5)
+            pygame.draw.rect(surface, bar_color, (bar_x, bar_y, fill_w, bar_h), border_radius=3)
+        pygame.draw.rect(surface, COLOR_GOLD, (bar_x, bar_y, bar_w, bar_h), width=1, border_radius=3)
 
-        title = f"☠️ DREADNOUGHT FINAL - FASE {self.phase} (HP: {int(self.hp)}/{self.max_hp}) ☠️"
+        title = f"// AMENAZA NIVEL OMEGA: DREADNOUGHT [FASE {self.phase}] //  HP: {int(self.hp)} / {self.max_hp}"
         name_t = font.render(title, True, COLOR_GOLD)
-        surface.blit(name_t, (self.screen_width // 2 - name_t.get_width() // 2, bar_y - 24))
+        surface.blit(name_t, (self.screen_width // 2 - name_t.get_width() // 2, bar_y - 17))
